@@ -58,13 +58,13 @@ export default function WorksPage() {
 									animate={{ opacity: 1, y: 0 }}
 									transition={{
 										duration: 0.5,
-										delay: post.originalIndex * 0.05,
+										delay: post.originalIndex * 0.1,
 										ease: 'easeOut',
 									}}
-									whileHover={{
-										y: -5,
-										transition: { duration: 0.2 },
-									}}
+									// whileHover={{
+									// 	y: -5,
+									// 	transition: { duration: 0.2 },
+									// }}
 									minH={{
 										base: minHeightMobile[post.originalIndex % minHeightMobile.length],
 										md: minHeightTablet[post.originalIndex % minHeightTablet.length],

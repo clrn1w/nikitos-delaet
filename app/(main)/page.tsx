@@ -1,5 +1,5 @@
 'use client'
-import { HStack, Strong, Text, Box, VStack } from '@chakra-ui/react'
+import { HStack, Strong, Text, Box } from '@chakra-ui/react'
 import logo from '@/public/imgs/logo.png'
 import { motion } from 'motion/react'
 import { useEffect, useState } from 'react'

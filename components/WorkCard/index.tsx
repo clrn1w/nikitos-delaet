@@ -159,6 +159,7 @@ export default function WorkCard({ images, children }: WorkCardProps) {
 			{hasContent && (
 				<Box
 					bg="white"
+					boxShadow="inset 0 0 98px rgba(0, 0, 0, 0.35)"
 					p={{
 						base: '1.6rem',
 						lg: '2.4rem',
@@ -168,6 +169,19 @@ export default function WorkCard({ images, children }: WorkCardProps) {
 					{children}
 				</Box>
 			)}
+			<Box
+				position="absolute"
+				top="0"
+				left="0"
+				right="0"
+				bottom="0"
+				pointerEvents="none"
+				backgroundImage={`url(${bgImg.src})`}
+				backgroundSize="cover"
+				backgroundPosition="center"
+				backgroundRepeat="no-repeat"
+				opacity="0.4"
+			/>
 		</MotionBox>
 	)
 }
