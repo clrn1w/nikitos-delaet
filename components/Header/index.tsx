@@ -5,52 +5,19 @@ import { HStack, Link, Text } from '@chakra-ui/react'
 import { motion } from 'motion/react'
 import React from 'react'
 
-const MotionLink = motion(Link)
-const MotionText = motion(Text)
-const MotionHStack = motion(HStack)
+const MotionLink = motion.create(Link)
+const MotionText = motion.create(Text)
+const MotionHStack = motion.create(HStack)
 
 export default function Header({ ...props }) {
-	const containerVariants = {
-		hidden: { opacity: 0 },
-		visible: {
-			opacity: 1,
-			transition: {
-				staggerChildren: 0.1,
-				delayChildren: 0.2,
-			},
-		},
-	}
-
-	const itemVariants = {
-		hidden: {
-			opacity: 0,
-			y: -20,
-			scale: 0.8,
-			rotateX: -90,
-			skewY: -4,
-		},
-		visible: {
-			opacity: 1,
-			y: 0,
-			scale: 1,
-			rotateX: 0,
-			skewY: -4,
-			transition: {
-				type: 'spring',
-				damping: 12,
-				stiffness: 200,
-			},
-		},
-	}
-
 	return (
 		<MotionHStack
 			gap="1.2rem"
-			variants={containerVariants}
+			variants={styles.containerVariants}
 			initial="hidden"
 			animate="visible"
 			position="fixed"
-			top="12rem"
+			top={{ base: '4.8rem', md: '8rem', lg: '12rem' }}
 			zIndex={10}
 		>
 			{menuItems.map(({ label, href }, index) => (
@@ -74,7 +41,7 @@ export default function Header({ ...props }) {
 							WebkitTextStroke: '1px rgba(0, 0, 0, 1)',
 							textStroke: '1px rgba(0, 0, 0, 0.3)',
 						}}
-						variants={itemVariants}
+						variants={styles.itemVariants}
 						whileHover={{
 							scale: 1.1,
 							skewY: 0,
@@ -94,7 +61,7 @@ export default function Header({ ...props }) {
 								textStroke: '1px rgba(0, 0, 0, 0.3)',
 							}}
 							textShadow="3px 3px 0px rgba(0, 0, 0, 0.8), 6px 6px 0px rgba(0, 0, 0, 0.4)"
-							variants={itemVariants}
+							variants={styles.itemVariants}
 							// whileHover={{
 							// 	scale: 1.3,
 							// 	rotate: 360,
@@ -108,4 +75,39 @@ export default function Header({ ...props }) {
 			))}
 		</MotionHStack>
 	)
+}
+
+const styles = {
+	containerVariants: {
+		hidden: { opacity: 0 },
+		visible: {
+			opacity: 1,
+			transition: {
+				staggerChildren: 0.1,
+				delayChildren: 0.2,
+			},
+		},
+	},
+
+	itemVariants: {
+		hidden: {
+			opacity: 0,
+			y: -20,
+			scale: 0.8,
+			rotateX: -90,
+			skewY: -4,
+		},
+		visible: {
+			opacity: 1,
+			y: 0,
+			scale: 1,
+			rotateX: 0,
+			skewY: -4,
+			transition: {
+				type: 'spring',
+				damping: 12,
+				stiffness: 200,
+			},
+		},
+	},
 }

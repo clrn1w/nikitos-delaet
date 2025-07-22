@@ -15,11 +15,7 @@ export default function Layout({ children }: LayoutProps) {
 
 			<Box
 				w="100%"
-				flex={1}
-				display="flex"
-				alignItems="center"
-				justifyContent="center"
-				pt="20rem"
+				pt={{ base: '12rem', md: '16rem', lg: '22rem' }}
 				pb="5rem"
 			>
 				{children}

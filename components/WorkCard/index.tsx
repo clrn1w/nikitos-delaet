@@ -1,11 +1,9 @@
 'use client'
-
-import { Box, Image, Grid, GridItem } from '@chakra-ui/react'
+import { Box, Grid, GridItem } from '@chakra-ui/react'
 import { motion } from 'motion/react'
-import { ReactNode } from 'react'
-
-const MotionBox = motion(Box)
-const MotionGridItem = motion(GridItem)
+import { Children, ReactNode } from 'react'
+import Image from '../base/Image'
+import bgImg from '@/public/imgs/cardBg.png'
 
 interface ImageData {
 	src: string
@@ -16,6 +14,9 @@ interface WorkCardProps {
 	images: ImageData[]
 	children: ReactNode
 }
+
+const MotionBox = motion.create(Box)
+const MotionGridItem = motion.create(GridItem)
 
 export default function WorkCard({ images, children }: WorkCardProps) {
 	const getLayoutConfig = (imageCount: number) => {
@@ -29,23 +30,21 @@ export default function WorkCard({ images, children }: WorkCardProps) {
 					},
 					items: [{ area: 'img1', index: 0 }],
 				}
-
 			case 2:
 				return {
 					template: {
 						columns: '1fr',
 						rows: '1fr 1fr',
 						areas: `
-							"img1"
-							"img2"
-						`,
+              "img1"
+              "img2"
+            `,
 					},
 					items: [
 						{ area: 'img1', index: 0 },
 						{ area: 'img2', index: 1 },
 					],
 				}
-
 			case 3:
 				return {
 					template: {
@@ -62,7 +61,6 @@ export default function WorkCard({ images, children }: WorkCardProps) {
 						{ area: 'img3', index: 2 },
 					],
 				}
-
 			case 4:
 				return {
 					template: {
@@ -71,7 +69,7 @@ export default function WorkCard({ images, children }: WorkCardProps) {
 						areas: `
               "img1 img1"
               "img2 img3"
-							"img2 img4"
+              "img2 img4"
             `,
 					},
 					items: [
@@ -81,17 +79,16 @@ export default function WorkCard({ images, children }: WorkCardProps) {
 						{ area: 'img4', index: 3 },
 					],
 				}
-
 			case 5:
 			default:
 				return {
 					template: {
-						columns: '3fr 1fr 1fr',
+						columns: '2fr 1fr 1fr',
 						rows: '2fr 1fr 1fr',
 						areas: `
               "img1 img1 img1"
               "img2 img3 img3"
-							"img2 img4 img5"
+              "img2 img4 img5"
             `,
 					},
 					items: [
@@ -106,28 +103,36 @@ export default function WorkCard({ images, children }: WorkCardProps) {
 	}
 
 	const layoutConfig = getLayoutConfig(images.length)
+	const hasContent = children && Children.count(children) > 0
 
 	return (
 		<MotionBox
 			initial={{ opacity: 0, y: 20 }}
 			animate={{ opacity: 1, y: 0 }}
 			transition={{ duration: 0.6 }}
-			maxW="45rem"
-			w="100%"
-			bg="white"
+			w={{
+				base: '35rem',
+				md: '38rem',
+				lg: '45rem',
+			}}
+			maxW="100%"
+			flexShrink="0"
 			borderRadius="2.4rem"
 			overflow="hidden"
+			position="relative"
 		>
 			<Box
-				h="40rem"
-				bg="white"
+				h={{
+					base: '30rem',
+					md: '35rem',
+					lg: '40rem',
+				}}
 			>
 				<Grid
 					h="100%"
 					templateColumns={layoutConfig.template.columns}
 					templateRows={layoutConfig.template.rows}
 					templateAreas={layoutConfig.template.areas}
-					gap="0.1rem"
 				>
 					{layoutConfig.items.map((item, idx) => {
 						const image = images[item.index] || images[images.length - 1]
@@ -151,7 +156,18 @@ export default function WorkCard({ images, children }: WorkCardProps) {
 					})}
 				</Grid>
 			</Box>
-			<Box p="2.4rem">{children}</Box>
+			{hasContent && (
+				<Box
+					bg="white"
+					p={{
+						base: '1.6rem',
+						lg: '2.4rem',
+					}}
+					fontSize="1.4rem"
+				>
+					{children}
+				</Box>
+			)}
 		</MotionBox>
 	)
 }

@@ -1,7 +1,7 @@
 import { LayoutProps } from '@/types/NextTypes'
 import type { Metadata } from 'next'
 import Providers from './Providers'
-import './fonts.css'
+import '@/public/fonts/fonts.css'
 
 export const metadata: Metadata = {
 	title: 'Никитос делает',

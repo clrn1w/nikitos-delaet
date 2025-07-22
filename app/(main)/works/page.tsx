@@ -1,163 +1,83 @@
 'use client'
-
-import { Text, Strong, Span, Em, Box } from '@chakra-ui/react'
-import testImg from '@/public/imgs/test.png'
+import { Box } from '@chakra-ui/react'
 import WorkCard from '@/components/WorkCard'
-import { useEffect, useState } from 'react'
-import { AnimatePresence, motion } from 'motion/react'
+import { motion } from 'motion/react'
+import { cards } from '@/constants/mockdata'
 
-const MotionBox = motion(Box)
+const MotionBox = motion.create(Box)
 
-function AnimatedWorkCard({
-	children,
-	index,
-	totalCards,
-	isAnimating,
-}: {
-	children: React.ReactNode
-	index: number
-	totalCards: number
-	isAnimating: boolean
-}) {
-	const spreadPosition = (index - (totalCards - 1) / 2) * 480
-
-	return (
-		<MotionBox
-			position="absolute"
-			initial={{
-				x: 0,
-				y: 0,
-				rotate: index * 2 - 4,
-				scale: 1 - index * 0.02,
-			}}
-			animate={{
-				x: isAnimating ? spreadPosition : 0,
-				y: isAnimating ? 0 : -index * 3,
-				rotate: isAnimating ? 0 : index * 2 - 4,
-				scale: isAnimating ? 1 : 1 - index * 0.02,
-			}}
-			transition={{
-				type: 'spring',
-				stiffness: 100,
-				damping: 20,
-				delay: isAnimating ? index * 0.1 : 0,
-			}}
-			style={{
-				zIndex: totalCards - index,
-			}}
-			whileHover={isAnimating ? { y: -10, transition: { duration: 0.2 } } : {}}
-		>
-			{children}
-		</MotionBox>
-	)
+type PostWithIndex = {
+	id: number
+	images: any[]
+	content?: any
+	originalIndex: number
 }
 
-const cards = [
-	{
-		images: [testImg, testImg, testImg, testImg, testImg],
-		content: (
-			<Text textWrap="balance">
-				В 2012 году я основал литературное издание <Strong color="#1c37be">«Дистопия»</Strong>, сочетавшее в себе фикшн и нон-фикшн. В публицистике преобладала
-				эссеистика, true story, психоанализ и философия. <br />
-				<br />
-				Редакция публиковала ранее неизданные переводы Хантера Томпсона, Сэлинджера, Кафки, Дэвида Фостера Уоллеса, Бротигана, а также ранее неизданные работы
-				русских авторов - Поляринова, Козлова, Алехина, Данишевского, Вилисова, Керви и др. <br />
-				<br />В 2019 году <Strong>«Дистопия»</Strong> также стала издательством, начав печатать книги. Тогда же вышли альманахи{' '}
-				<Em color="#1c37be">«Принятие»</Em> и <Em color="#1c37be">«Трикстер»</Em>, включившие в себя знаковые работы авторов издания.
-				<br />
-				<br />
-				<Span
-					color="#a1a1a1"
-					fontSize="1.4rem"
-				>
-					На момент консервирования проекта в 2022 году, аудитория превышала 120 000 подписчиков.
-				</Span>
-			</Text>
-		),
-	},
-	{
-		images: [testImg, testImg, testImg],
-		content: (
-			<Text textWrap="balance">
-				В 2016 вышла игра <Strong color="#1c37be">«Меня зовут Ты»</Strong>, давшая мне старт как разработчику и издателю под именем Nikita Kaf Productions /
-				Publishing. <br />
-				<br /> В 2020 году я издал игру, которая получила название <Strong color="#1c37be">Milk inside a bag of milk inside a bag of milk</Strong> и в ближайшие
-				полдекады продалась тиражом более 1 000 000 копий. <br />
-				<br /> С 2021 года издательство и студия приобрели название <Strong color="#1c37be">Missing Calm</Strong>. <br />
-				<br /> По состоянию на 2025 год, в разработке находится несколько проектов, в том числе с использованием Unreal Engine 5.
-			</Text>
-		),
-	},
-	{
-		images: [testImg, testImg, testImg, testImg, testImg],
-		content: (
-			<Text textWrap="balance">
-				В 2012 году я основал литературное издание <Strong color="#1c37be">«Дистопия»</Strong>, сочетавшее в себе фикшн и нон-фикшн. В публицистике преобладала
-				эссеистика, true story, психоанализ и философия. <br />
-				<br />
-				Редакция публиковала ранее неизданные переводы Хантера Томпсона, Сэлинджера, Кафки, Дэвида Фостера Уоллеса, Бротигана, а также ранее неизданные работы
-				русских авторов - Поляринова, Козлова, Алехина, Данишевского, Вилисова, Керви и др. <br />
-				<br />В 2019 году <Strong>«Дистопия»</Strong> также стала издательством, начав печатать книги. Тогда же вышли альманахи{' '}
-				<Em color="#1c37be">«Принятие»</Em> и <Em color="#1c37be">«Трикстер»</Em>, включившие в себя знаковые работы авторов издания.
-				<br />
-				<br />
-				<Span
-					color="#a1a1a1"
-					fontSize="1.4rem"
-				>
-					На момент консервирования проекта в 2022 году, аудитория превышала 120 000 подписчиков.
-				</Span>
-			</Text>
-		),
-	},
-]
-
 export default function WorksPage() {
-	const [isAnimating, setIsAnimating] = useState(false)
+	const posts = cards
+	const columns = 3
 
-	useEffect(() => {
-		const timer = setTimeout(() => {
-			setIsAnimating(true)
-		}, 500)
+	const postsByColumn: PostWithIndex[][] = Array.from({ length: columns }, () => [])
 
-		return () => clearTimeout(timer)
-	}, [])
-
-	const containerWidth = isAnimating ? cards.length * 480 + 200 : 600
+	posts.forEach((post, index) => {
+		postsByColumn[index % columns].push({ ...post, originalIndex: index })
+	})
 
 	return (
-		<Box
-			w="100%"
-			minH="100vh"
-			display="flex"
-			alignItems="center"
-			justifyContent="center"
-			overflow="auto"
-			px="2rem"
-			py="8rem"
-		>
+		<>
 			<Box
-				position="relative"
-				w={`${containerWidth}px`}
-				h="100vh"
-				transition="width 1s ease-out"
 				display="flex"
-				alignItems="flex-start"
+				gap="2.4rem"
+				mx="auto"
+				maxW="140rem"
+				flexWrap="wrap"
 				justifyContent="center"
 			>
-				<AnimatePresence>
-					{cards.map((card, index) => (
-						<AnimatedWorkCard
-							key={index}
-							index={index}
-							totalCards={cards.length}
-							isAnimating={isAnimating}
-						>
-							<WorkCard images={card.images}>{card.content}</WorkCard>
-						</AnimatedWorkCard>
-					))}
-				</AnimatePresence>
+				{postsByColumn.map((column, columnIndex) => (
+					<Box
+						key={`column-${columnIndex}`}
+						flex={{
+							base: '1 1 100%',
+							md: '1 1 calc(50% - 1.2rem)',
+							lg: '1 1 calc(33.333% - 1.6rem)',
+						}}
+						display="flex"
+						flexDirection="column"
+						gap="2.4rem"
+						alignItems="center"
+					>
+						{column.map((post) => {
+							const minHeightMobile = ['200px', '250px', '220px', '280px', '240px']
+							const minHeightTablet = ['250px', '320px', '280px', '350px', '300px']
+							const minHeightDesktop = ['300px', '400px', '350px', '450px', '380px']
+
+							return (
+								<MotionBox
+									key={`post-id-${post.id}`}
+									initial={{ opacity: 0, y: 30 }}
+									animate={{ opacity: 1, y: 0 }}
+									transition={{
+										duration: 0.5,
+										delay: post.originalIndex * 0.05,
+										ease: 'easeOut',
+									}}
+									whileHover={{
+										y: -5,
+										transition: { duration: 0.2 },
+									}}
+									minH={{
+										base: minHeightMobile[post.originalIndex % minHeightMobile.length],
+										md: minHeightTablet[post.originalIndex % minHeightTablet.length],
+										lg: minHeightDesktop[post.originalIndex % minHeightDesktop.length],
+									}}
+								>
+									<WorkCard images={post.images}>{post.content}</WorkCard>
+								</MotionBox>
+							)
+						})}
+					</Box>
+				))}
 			</Box>
-		</Box>
+		</>
 	)
 }
